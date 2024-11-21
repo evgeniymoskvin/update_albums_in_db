@@ -14,15 +14,7 @@ from pathlib import Path
 import os
 
 from dotenv import load_dotenv
-load_dotenv()
 
-
-SQL_ENGINE = os.getenv('SQL_ENGINE')
-SQL_DATABASE = os.getenv('SQL_DATABASE')
-SQL_USER = os.getenv('SQL_USER')
-SQL_PASSWORD = os.getenv('SQL_PASSWORD')
-SQL_HOST = os.getenv('SQL_PASSWORD')
-SQL_PRT = os.getenv('SQL_PRT')
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -86,14 +78,25 @@ WSGI_APPLICATION = 'update_albums_in_db.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': SQL_ENGINE,
+#         'NAME': SQL_DATABASE,
+#         'USER': SQL_USER,
+#         'PASSWORD': SQL_PASSWORD,
+#         'HOST': SQL_HOST,
+#         'PORT': SQL_PORT,
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("SQL_ENGINE", 'django.db.backends.sqlite3'),
-        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
-        'USER': os.environ.get('SQL_USER', 'user'),
-        'PASSWORD': os.environ.get('SQL_PASSWORD', 'P@ssw0rd'),
-        'HOST': os.environ.get('SQL_HOST', 'localhost'),
-        'PORT': os.environ.get('SQL_PRT', '5432')
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'todo',
+        'USER': 'todo',
+        'PASSWORD': 'P@ssw0rd',
+        'HOST': '161.11.20.121',
+        'PORT': '5432'
     }
 }
 
