@@ -1,5 +1,6 @@
 import mimetypes
 import time
+from datetime import datetime
 
 from django.shortcuts import render
 from django.core.management import execute_from_command_line
@@ -24,13 +25,13 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 class IndexView(View):
     def get(self, request):
         update_db()
-        return HttpResponse(status=200)
+        return HttpResponse('Update files from folders - done', status=200)
 
 
 class CheckFilesFromDBView(View):
     def get(self, request):
         check_albums_from_db()
-        return HttpResponse(status=200)
+        return HttpResponse('Check files from db - done', status=200)
 
 
 class GetFileView(View):
@@ -46,7 +47,8 @@ class GetFileView(View):
                 response['Content-Disposition'] = 'attachment; filename="%s"' % obj.album_name
                 return response
             else:
-                return HttpResponse('File not found', status=500)
+                return HttpResponse('File not found', status=404)
         except Exception as e:
             print(e)
             return HttpResponse('Объект не найден в базе данных', status=404)
+

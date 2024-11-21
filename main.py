@@ -6,11 +6,11 @@ from dotenv import load_dotenv
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "update_albums_in_db.settings")
 
 load_dotenv()
-PORT = os.getenv('PORT')
+UPDATE_DB_PORT = os.getenv('UPDATE_DB_PORT')
 # Create your views here.
 
 def run_server():
-    execute_from_command_line(["manage.py", "runserver", PORT, "--noreload"])
+    execute_from_command_line(["manage.py", "runserver", UPDATE_DB_PORT, "--noreload"])
 
 
 if __name__ == "__main__":

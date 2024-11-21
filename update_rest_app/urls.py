@@ -19,7 +19,7 @@ from django.urls import path, include
 from . import views
 
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='update-index-files'),
+    path('check-os_walk', views.IndexView.as_view(), name='update-index-files'),
     path('check_from_db', views.CheckFilesFromDBView.as_view(), name='check-albums-from-db'),
     path('download_album_api/<int:pk>', views.GetFileView.as_view(), name='download-album'),
 ]
