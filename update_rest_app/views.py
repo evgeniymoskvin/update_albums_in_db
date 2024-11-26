@@ -8,6 +8,8 @@ from django.views import View
 from django.http import HttpResponse, FileResponse
 from rest_framework import viewsets, renderers
 from rest_framework.decorators import action
+from transliterate import translit
+from django.utils.encoding import escape_uri_path
 
 from dotenv import load_dotenv
 
@@ -24,14 +26,14 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 
 class IndexView(View):
     def get(self, request):
-        update_db()
-        return HttpResponse('Update files from folders - done', status=200)
+        result_info = update_db()
+        return HttpResponse(f'Update files from folders - done \n {result_info}', status=200)
 
 
 class CheckFilesFromDBView(View):
     def get(self, request):
-        check_albums_from_db()
-        return HttpResponse('Check files from db - done', status=200)
+        check_result_info = check_albums_from_db()
+        return HttpResponse(f'Check files from db - done. \n {check_result_info}', status=200)
 
 
 class GetFileView(View):
@@ -44,7 +46,9 @@ class GetFileView(View):
                 file_handle = open(obj.file_path, 'rb')
                 mime_type, _ = mimetypes.guess_type(obj.file_path)
                 response = FileResponse(file_handle, content_type=mime_type)
-                response['Content-Disposition'] = 'attachment; filename="%s"' % obj.album_name
+                print(obj.album_name)
+                response['Content-Disposition'] = f'attachment; filename={escape_uri_path(obj.album_name)}'
+                # response['Content-Disposition'] = f'attachment; filename={translit(str(obj.album_name), "ru", reversed=True)}'
                 return response
             else:
                 return HttpResponse('File not found', status=404)

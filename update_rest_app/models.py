@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 class ArchiveFilesModel(models.Model):
     """Таблица альбомов """
-    album_name = models.CharField(unique=True, verbose_name='Наименование альбома', max_length=20, null=True,
+    album_name = models.CharField(unique=True, verbose_name='Наименование альбома', max_length=128, null=True,
                                   blank=True)
     file_path = models.CharField(verbose_name='Путь к файлу', max_length=2500, null=True, blank=True)
     file_size = models.FloatField(verbose_name='Размер файла', max_length=50, null=True, blank=True)

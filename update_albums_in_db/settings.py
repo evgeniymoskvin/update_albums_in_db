@@ -15,8 +15,6 @@ import os
 
 from dotenv import load_dotenv
 
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,7 +27,8 @@ SECRET_KEY = 'django-insecure-jktxj)9)xn9l@fmo)utx6ic8y(*)hrsw@00ibwrq*@l%g5ya9%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["61.11.20.105", "0.0.0.0", "127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = ["http://161.11.20.105", "http://0.0.0.0,"]
 
 # Application definition
 
@@ -41,12 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'update_rest_app'
+    'update_rest_app',
+    'corsheaders',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -80,32 +84,21 @@ WSGI_APPLICATION = 'update_albums_in_db.wsgi.application'
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': SQL_ENGINE,
-#         'NAME': SQL_DATABASE,
-#         'USER': SQL_USER,
-#         'PASSWORD': SQL_PASSWORD,
-#         'HOST': SQL_HOST,
-#         'PORT': SQL_PORT,
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'todo',
+#         'USER': 'todo',
+#         'PASSWORD': 'P@ssw0rd',
+#         'HOST': '161.11.20.121',
+#         'PORT': '5432'
 #     }
 # }
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'todo',
-        'USER': 'todo',
-        'PASSWORD': 'P@ssw0rd',
-        'HOST': '161.11.20.121',
-        'PORT': '5432'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
