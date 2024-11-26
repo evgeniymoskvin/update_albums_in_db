@@ -45,7 +45,7 @@ class GetFileView(View):
             if os.path.exists(obj.file_path):
                 file_handle = open(obj.file_path, 'rb')
                 mime_type, _ = mimetypes.guess_type(obj.file_path)
-                response = FileResponse(file_handle, content_type=mime_type)
+                response = FileResponse(file_handle, content_type='application/pdf')
                 print(obj.album_name)
                 response['Content-Disposition'] = f'attachment; filename={escape_uri_path(obj.album_name)}'
                 # response['Content-Disposition'] = f'attachment; filename={translit(str(obj.album_name), "ru", reversed=True)}'
