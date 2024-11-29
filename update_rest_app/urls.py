@@ -21,5 +21,7 @@ from . import views
 urlpatterns = [
     path('check-os_walk', views.IndexView.as_view(), name='update-index-files'),
     path('check_from_db', views.CheckFilesFromDBView.as_view(), name='check-albums-from-db'),
+    path('check_editable_from_db', views.CheckEditableFromDBView.as_view(), name='check-editable-from-db'),
     path('download_album_api/<int:pk>', views.GetFileView.as_view(), name='download-album'),
+    path('download_editable_api/<int:pk>', views.GetEditableFileView.as_view(), name='download-editable'),
 ]

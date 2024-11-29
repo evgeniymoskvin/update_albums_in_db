@@ -32,6 +32,7 @@ load_dotenv()
 ALLOWED_HOSTS = ["161.11.20.105:8012", "161.11.20.105", "0.0.0.0", "127.0.0.1"]
 # ALLOWED_HOSTS = [str(i)[1:-1] for i in ALLOWED_HOSTS_ENV[1:-1].split(",") if i.strip()]
 CSRF_TRUSTED_ORIGINS = ["http://161.11.20.105", "http://0.0.0.0,"]
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Application definition
 
@@ -85,23 +86,23 @@ WSGI_APPLICATION = 'update_albums_in_db.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'todo',
-        'USER': 'todo',
-        'PASSWORD': 'P@ssw0rd',
-        'HOST': '161.11.20.121',
-        'PORT': '5432'
-    }
-}
-#
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'todo',
+#         'USER': 'todo',
+#         'PASSWORD': 'P@ssw0rd',
+#         'HOST': '161.11.20.121',
+#         'PORT': '5432'
 #     }
 # }
+# #
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
