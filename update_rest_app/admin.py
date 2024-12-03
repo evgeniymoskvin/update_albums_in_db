@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ArchiveFilesModel, ArchiveEditableFilesModel
+from .models import ArchiveFilesModel, ArchiveEditableFilesModel, CountsFilesInArchive
 # Register your models here.
 
 class ArchiveFilesAdmin(admin.ModelAdmin):
@@ -14,3 +14,4 @@ class ArchiveEditableFilesAdmin(admin.ModelAdmin):
 
 admin.site.register(ArchiveFilesModel, ArchiveFilesAdmin)
 admin.site.register(ArchiveEditableFilesModel, ArchiveEditableFilesAdmin)
+admin.site.register(CountsFilesInArchive)

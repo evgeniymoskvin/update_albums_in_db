@@ -23,6 +23,7 @@ class ArchiveFilesModel(models.Model):
     def __str__(self):
         return f'{self.album_name} (md5:{self.md5_file}) {self.file_path}'
 
+
 class ArchiveEditableFilesModel(models.Model):
     """Таблица альбомов """
     album_name = models.CharField(unique=True, verbose_name='Наименование архива', max_length=128, null=True,
@@ -42,3 +43,22 @@ class ArchiveEditableFilesModel(models.Model):
 
     def __str__(self):
         return f'{self.album_name} (md5:{self.md5_file}) {self.file_path}'
+
+
+class CountsFilesInArchive(models.Model):
+    """Счетчик количества файлов в архиве"""
+
+    count_pdf = models.IntegerField(verbose_name='Количество pdf файлов', null=True, blank=True)
+    count_editable = models.IntegerField(verbose_name='Количество zip файлов', null=True, blank=True)
+    count_of_add_files = models.IntegerField(verbose_name='Количество добавленных файлов', null=True, blank=True)
+    date_log = models.DateTimeField(verbose_name='Дата и время обновления', auto_now_add=True, null=False)
+
+    class Meta:
+        verbose_name = _('количество файлов')
+        verbose_name_plural = _('количество файлов')
+        managed = False
+        db_table = 'get_inventory_app_countsfilesinarchive'
+
+
+    def __str__(self):
+        return f'{self.date_log} - {self.count_pdf} - {self.count_editable}'

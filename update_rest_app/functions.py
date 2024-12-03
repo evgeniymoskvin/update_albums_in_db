@@ -5,7 +5,7 @@ import os
 import platform
 import logging
 import hashlib
-from .models import ArchiveFilesModel, ArchiveEditableFilesModel
+from .models import ArchiveFilesModel, ArchiveEditableFilesModel, CountsFilesInArchive
 from dotenv import load_dotenv
 from django.db import IntegrityError
 
@@ -75,7 +75,9 @@ def update_db():
 
     count_files_added = 0
     count_files_updated = 0
-    count_files = 0
+    count_pdf = 0
+    count_editable = 0
+
     folder_paths_list = [str(i)[1:-1] for i in FOLDER_PATHS[1:-1].split(",") if i.strip()]
     problem_list = []
     for folder_path in folder_paths_list:
@@ -89,8 +91,8 @@ def update_db():
             print(f'folder: {folder[0]}')
             logging.info(f'folder: {folder[0]}')
             for file in folder[2]:
-                count_files += 1
                 if str(file).endswith('.pdf'):
+                    count_pdf += 1
                     print('------')
                     print(file)
                     start_time_file = datetime.now()
@@ -117,17 +119,18 @@ def update_db():
                                 update_archive_data = ArchiveFilesModel.objects.get(album_name=file)
                                 update_archive_data.file_path = full_path
                                 update_archive_data.file_size = current_file_size
-                                update_archive_data.md5_file = md5_file
                                 update_archive_data.data_create = current_creation_date
-                                update_archive_data.date_update = current_update_date
-                                try:
-                                    update_archive_data.save()
-                                    print(f'{file} ({full_path}) обновлены данные')
-                                    logging.info(f'{file} ({full_path}) обновлены данные')
-                                    count_files_updated += 1
-                                except:
-                                    problem_list.append((update_archive_data.album_name, update_archive_data.file_path))
-                                    logging.error(f'{file} {full_path} Ошибка обновления данных')
+                                if (md5_file != update_archive_data.md5_file):
+                                    update_archive_data.md5_file = md5_file
+                                    update_archive_data.date_update = current_update_date
+                                    try:
+                                        update_archive_data.save()
+                                        print(f'{file} ({full_path}) обновлены данные')
+                                        logging.info(f'{file} ({full_path}) обновлены данные')
+                                        count_files_updated += 1
+                                    except:
+                                        problem_list.append((update_archive_data.album_name, update_archive_data.file_path))
+                                        logging.error(f'{file} {full_path} Ошибка обновления данных')
                             elif 'md5_file' in str(e.args).lower():
                                 print(f'{file} дубляж')
                         except Exception as e:
@@ -138,6 +141,7 @@ def update_db():
                     """Файл в редактируемом формате"""
                     print('------')
                     print(file)
+                    count_editable += 1
                     start_time_file = datetime.now()
                     if os.path.isfile(os.path.join(str(folder[0]), file)):
                         full_path = os.path.join(str(folder[0]), file)
@@ -162,17 +166,20 @@ def update_db():
                                 update_archive_data = ArchiveEditableFilesModel.objects.get(album_name=file)
                                 update_archive_data.file_path = full_path
                                 update_archive_data.file_size = current_file_size
-                                update_archive_data.md5_file = md5_file
                                 update_archive_data.data_create = current_creation_date
-                                update_archive_data.date_update = current_update_date
-                                try:
-                                    update_archive_data.save()
-                                    print(f'{file} ({full_path}) обновлены данные')
-                                    logging.info(f'{file} ({full_path}) обновлены данные')
-                                    count_files_updated += 1
-                                except:
-                                    problem_list.append((update_archive_data.album_name, update_archive_data.file_path))
-                                    logging.error(f'{file} {full_path} Ошибка обновления данных')
+                                print(type(update_archive_data.date_update), update_archive_data.date_update)
+                                print(type(current_update_date), current_update_date)
+                                if (md5_file != update_archive_data.md5_file):
+                                    update_archive_data.md5_file = md5_file
+                                    update_archive_data.date_update = current_update_date
+                                    try:
+                                        update_archive_data.save()
+                                        print(f'{file} ({full_path}) обновлены данные')
+                                        logging.info(f'{file} ({full_path}) обновлены данные')
+                                        count_files_updated += 1
+                                    except:
+                                        problem_list.append((update_archive_data.album_name, update_archive_data.file_path))
+                                        logging.error(f'{file} {full_path} Ошибка обновления данных')
                             elif 'md5_file' in str(e.args).lower():
                                 print(f'{file} дубляж')
                         except Exception as e:
@@ -182,6 +189,7 @@ def update_db():
 
             print(f'Всего файлов в папке обработано {len(folder[2])}')
             logging.info(f'Всего файлов в папке обработано {len(folder[2])}')
+    count_files = count_pdf + count_editable
     print(f'Добавлено новых: {count_files_added}')
     logging.info(f'Добавлено новых: {count_files_added}')
     print(f'Обновлено: {count_files_updated}')
@@ -191,6 +199,11 @@ def update_db():
     print(f'Обратить внимание: {problem_list}')
     logging.warning(f'Обратить внимание: {problem_list}')
     end_time = datetime.now()
+    new_count = CountsFilesInArchive(count_pdf=count_pdf,
+                                     count_editable=count_editable,
+                                     count_of_add_files=count_files_added
+                                     )
+    new_count.save()
     print('Время выполнения: {}'.format(end_time - start_time))
     logging.info(f'Время выполнения: {format(end_time - start_time)}')
     return f'Добавлено новых: {count_files_added} \n Обновлено: {count_files_updated} \n Обработано файлов: {count_files} \n  Время выполнения: {format(end_time - start_time)}'
