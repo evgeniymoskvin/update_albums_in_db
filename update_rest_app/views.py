@@ -11,6 +11,7 @@ from rest_framework.decorators import action
 from transliterate import translit
 from django.utils.encoding import escape_uri_path
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.views.decorators.csrf import csrf_exempt
 
 from dotenv import load_dotenv
 
@@ -67,6 +68,7 @@ class GetFileView(View):
 
 class GetEditableFileView(View):
     """Скачивание"""
+
     @xframe_options_exempt
     @action(methods=['get'], detail=True)
     def get(self, request, pk):
@@ -87,3 +89,21 @@ class GetEditableFileView(View):
             print(e)
             return HttpResponse('Объект не найден в базе данных', status=404)
 
+
+
+class AddFileToStorage(View):
+    @csrf_exempt
+    def post(self, request):
+        print(f'request.user: {request.user}')
+        print(f'request.POST: {request.POST}')
+        print(f'request.FILES: {request.FILES}')
+        print(f'request.FILES: {request.FILES["file"]}')
+        print(f'request.FILES: {request.FILES["file"]}')
+        path_from_req = request.POST['path']
+        path_to_save = os.path.join(path_from_req, 'test_file.pdf')
+
+        f = request.FILES["file"]
+        with open(f"test_file.pdf", "wb+") as destination:
+            for chunk in f.chunks():
+                destination.write(chunk)
+        return HttpResponse(f'Update files from folders - done', status=200)

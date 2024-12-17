@@ -24,4 +24,5 @@ urlpatterns = [
     path('check_editable_from_db', views.CheckEditableFromDBView.as_view(), name='check-editable-from-db'),
     path('download_album_api/<int:pk>', views.GetFileView.as_view(), name='download-album'),
     path('download_editable_api/<int:pk>', views.GetEditableFileView.as_view(), name='download-editable'),
+    path('upload_file', views.AddFileToStorage.as_view(), name='upload-file'),
 ]
